@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace ska.GA {
 	abstract class FitnessCalculator<T> where T : Evolvable {
-		public abstract float getFitness(T specimen);
+		public abstract double getFitness(T specimen);
 	}
 }

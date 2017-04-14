@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ska.GA {
 	class EvolvableString : Evolvable {
 
-		const int SIZE = 5;
+		public const int SIZE = 5;
 
 
 		private char[] dna = new char[SIZE];

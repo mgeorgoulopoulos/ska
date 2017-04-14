@@ -32,7 +32,7 @@ namespace ska.GA {
 			}
 		}
 
-		void updateGeneration() {
+		public void updateGeneration() {
 			generationCount++;
 
 			// calculate fitness values
@@ -61,6 +61,13 @@ namespace ska.GA {
 			double maxFitness = population[0].fitness;
 
 			Console.Write("" + generationCount + "\t" + averageFitness + "\t" + maxFitness + "\n");
+
+			// print top 5 members
+			for (int i = 0; i < 5; i++) {
+				if (i >= population.Count) break;
+				Console.Write(population[i].toString() + "\t");
+			}
+			Console.Write("\n");
 		}
 
 		void produceOffspring() {
@@ -109,6 +116,10 @@ namespace ska.GA {
 			return Helper.RandomDouble() < mutationRate;
 		}
 
-
+		public T champion {
+			get {
+				return population[0];
+			}
+		}
 	}
 }
