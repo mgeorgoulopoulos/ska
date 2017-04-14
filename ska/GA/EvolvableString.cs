@@ -41,7 +41,7 @@ namespace ska.GA {
 			return ret;
 		}
 
-		public override void crossover(Evolvable parentA, Evolvable parentB, ref Evolvable childA, ref Evolvable childB) {
+		public override void crossover(Evolvable parentA, Evolvable parentB, Evolvable childA, Evolvable childB) {
 			var pA = parentA as EvolvableString;
 			var pB = parentB as EvolvableString;
 			var cA = childA as EvolvableString;

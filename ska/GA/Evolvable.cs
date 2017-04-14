@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ska.GA {
-	class Evolvable {
+	abstract class Evolvable {
 
 		public double fitness = 0.0;
 
@@ -21,9 +21,6 @@ namespace ska.GA {
 		// apply the mutation operator to the specified locus
 		public abstract void mutateLocus(int which);
 		
-		// apply crossover operator and return the resulting offspring
-		public abstract Evolvable crossover(Evolvable otherParent);
-
 		// crossover operator
 		public abstract void crossover(Evolvable parentA, Evolvable parentB, Evolvable childA, Evolvable childB);
 	}
