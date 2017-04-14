@@ -35,6 +35,9 @@ namespace ska.GA {
 		void updateGeneration() {
 			generationCount++;
 
+			// calculate fitness values
+			foreach (var s in population) s.fitness = fitnessCalculator.getFitness(s);
+
 			// sort population by fitness
 			population = population.OrderByDescending(o => o.fitness).ToList();
 
@@ -72,7 +75,7 @@ namespace ska.GA {
 			offspring2.randomize();
 
 			// crossover chromosome
-			if (rollDiceForCrossover) {
+			if (rollDiceForCrossover()) {
 				parent1.crossover(parent1, parent2,  offspring1, offspring2);
 			}
 
@@ -88,7 +91,7 @@ namespace ska.GA {
 		// specimen mutation
 		void mutate(T s) {
 			for (int i = 0; i < s.getLocusCount(); i++) {
-				if (rollDiceForMutation) s.mutateLocus(i);
+				if (rollDiceForMutation()) s.mutateLocus(i);
 			}
 		}
 
@@ -98,16 +101,12 @@ namespace ska.GA {
 			}
 		}
 
-		bool rollDiceForCrossover {
-			get {
-				return Helper.RandomDouble() < crossoverRate;
-			}
+		bool rollDiceForCrossover() {
+			return Helper.RandomDouble() < crossoverRate;
 		}
 
-		bool rollDiceForMutation {
-			get {
-				return Helper.RandomDouble() < mutationRate;
-			}
+		bool rollDiceForMutation() {
+			return Helper.RandomDouble() < mutationRate;
 		}
 
 
