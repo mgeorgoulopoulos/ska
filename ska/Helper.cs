@@ -29,6 +29,9 @@ namespace ska {
 			return perThreadData.rnd.Next(from, to);
 		}
 
+		public static double RandomDouble() {
+			return perThreadData.rnd.NextDouble();
+		}
 
 
 	}

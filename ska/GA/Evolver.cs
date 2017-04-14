@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ska.GA {
-	class Evolver<T> where T : Evolvable {
+	class Evolver<T> where T : Evolvable, new() {
 
 
 		const int populationSize = 50;
@@ -65,19 +65,15 @@ namespace ska.GA {
 			T parent1 = topRankingRandom;
 			T parent2 = topRankingRandom;
 
-			T offspring1 = parent1.clone;
-			T offspring2 = parent2.clone;
+			T offspring1 = new T();
+			T offspring2 = new T();
 
-			// crossover vertex chromosome
-			if (performCrossover) {
-				crossoverVerts(offspring1, parent1, parent2);
-				crossoverVerts(offspring2, parent1, parent2);
-			}
+			offspring1.randomize();
+			offspring2.randomize();
 
-			// crossover color chromosome
-			if (performCrossover) {
-				crossoverColors(offspring1, parent1, parent2);
-				crossoverColors(offspring2, parent1, parent2);
+			// crossover chromosome
+			if (rollDiceForCrossover) {
+				parent1.crossover(parent1, parent2,  offspring1, offspring2);
 			}
 
 			// mutate both offsprings
@@ -89,76 +85,28 @@ namespace ska.GA {
 			if (population.Count < populationSize) population.Add(offspring2);
 		}
 
-		// crossover of vertex chromosome
-		void crossoverVerts(Specimen offspring, Specimen parent1, Specimen parent2) {
-			// uniform crossover
-			for (int i = 0; i < offspring.verts.Length; i++) {
-				if (rnd.NextDouble() < 0.5) {
-					offspring.verts[i] = parent1.verts[i];
-				} else {
-					offspring.verts[i] = parent2.verts[i];
-				}
-			}
-		}
-
-		// crossover of color chromosome
-		void crossoverColors(Specimen offspring, Specimen parent1, Specimen parent2) {
-			// uniform crossover
-			for (int i = 0; i < offspring.colors.Length; i++) {
-				if (rnd.NextDouble() < 0.5) {
-					offspring.colors[i] = parent1.colors[i];
-				} else {
-					offspring.colors[i] = parent2.colors[i];
-				}
-			}
-		}
-
 		// specimen mutation
-		void mutate(Specimen s) {
-			for (int i = 0; i < s.verts.Length; i++) {
-				if (performMutation) s.verts[i].X = mutatePosition(s.verts[i].X);
-				if (performMutation) s.verts[i].Y = mutatePosition(s.verts[i].Y);
-				if (performMutation) s.verts[i].Z = mutatePosition(s.verts[i].Z);
-			}
-
-			for (int i = 0; i < s.colors.Length; i++) {
-				if (performMutation) s.colors[i].R = mutateColor(s.colors[i].R);
-				if (performMutation) s.colors[i].G = mutateColor(s.colors[i].G);
-				if (performMutation) s.colors[i].B = mutateColor(s.colors[i].B);
+		void mutate(T s) {
+			for (int i = 0; i < s.getLocusCount(); i++) {
+				if (rollDiceForMutation) s.mutateLocus(i);
 			}
 		}
 
-		float mutatePosition(float x) {
-			if (rnd.NextDouble() < 0.5) {
-				return x + (float)rnd.NextDouble() * (2.0f * positionMutationStep) - positionMutationStep;
-			} else {
-				return (float)(rnd.NextDouble() * 2.0 - 1.0);
-			}
-		}
-
-		float mutateColor(float x) {
-			if (rnd.NextDouble() < 0.5) {
-				return Math.Min(1.0f, Math.Max(0.0f, x + (float)rnd.NextDouble() * (2.0f * colorMutationStep) - colorMutationStep));
-			} else {
-				return (float)rnd.NextDouble();
-			}
-		}
-
-		Specimen topRankingRandom {
+		T topRankingRandom {
 			get {
-				return population[rnd.Next(rankSelection)];
+				return population[Helper.RandomInt(0, rankSelection)];
 			}
 		}
 
-		bool performCrossover {
+		bool rollDiceForCrossover {
 			get {
-				return rnd.NextDouble() < crossoverRate;
+				return Helper.RandomDouble() < crossoverRate;
 			}
 		}
 
-		bool performMutation {
+		bool rollDiceForMutation {
 			get {
-				return rnd.NextDouble() < mutationRate;
+				return Helper.RandomDouble() < mutationRate;
 			}
 		}
 

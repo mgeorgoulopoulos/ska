@@ -41,11 +41,11 @@ namespace ska.GA {
 			return ret;
 		}
 
-		static override void crossover(Evolvable parentA, Evolvable parentB, ref Evolvable childA, ref Evolvable childB) {
+		public override void crossover(Evolvable parentA, Evolvable parentB, ref Evolvable childA, ref Evolvable childB) {
 			var pA = parentA as EvolvableString;
 			var pB = parentB as EvolvableString;
-			var cA = new EvolvableString();
-			var cB = new EvolvableString();
+			var cA = childA as EvolvableString;
+			var cB = childB as EvolvableString;
 
 			int m = Helper.RandomInt(0, SIZE + 1);
 
@@ -58,9 +58,6 @@ namespace ska.GA {
 					cB.dna[i] = pB.dna[i];
 				}
 			}
-
-			childA = cA;
-			childB = cB;
 		}
 
 	}

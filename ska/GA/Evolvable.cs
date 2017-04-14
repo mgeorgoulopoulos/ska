@@ -17,11 +17,14 @@ namespace ska.GA {
 
 		// how many genetic locations (letters in its dna) does this specimen have?
 		public abstract int getLocusCount();
+
+		// apply the mutation operator to the specified locus
+		public abstract void mutateLocus(int which);
 		
 		// apply crossover operator and return the resulting offspring
 		public abstract Evolvable crossover(Evolvable otherParent);
 
 		// crossover operator
-		static abstract void crossover(Evolvable parentA, Evolvable parentB, ref Evolvable childA, ref Evolvable childB);
+		public abstract void crossover(Evolvable parentA, Evolvable parentB, Evolvable childA, Evolvable childB);
 	}
 }

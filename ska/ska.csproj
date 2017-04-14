@@ -43,6 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GA\Evolvable.cs" />
+    <Compile Include="GA\EvolvableString.cs" />
+    <Compile Include="GA\Evolver.cs" />
+    <Compile Include="GA\FitnessCalculator.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
