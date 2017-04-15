@@ -1,0 +1,126 @@
+1 - Chess code
+================================================================
+
+	Create an abstract "Player" class
+	we will create 4 kinds of players:
+		Greedy player
+			Will play millions of matches against itself in Step 2
+		StrategicPlayer
+			Will evolve a plan (against a human player)
+		StochasticPlayer
+			will either maximize his score or minimize its opponent's with a 50/50 chance
+		HumanPlayer
+			will sit and wait until a human inputs a move in the console
+
+	Notes:
+		implement "Castling" move
+		implement promotion to Queen
+		implement checkmate
+		Kings cannot check other Kings
+
+2 - Learn a good score function for a chessboard state
+================================================================
+
+State vector:
+	Number of pawns
+	Numebr of knights
+	Number of bishops
+	Number of rooks
+	Number of queens
+	Advancement (how far into the board is our vanguard)
+	Number of lower rank threats
+	Number of same rank threats
+	Number of greater rank threats
+	Number of lower rank supports
+	Number of same rank supports
+	Number of higher rank supports
+	Number of possible moves for our King
+	Number of possible moves for enemy King
+	Armour of our King (our pieces that lie around him)
+	Armour of enemy King
+	Number of positions we threaten around the enemy King
+	Number of positions the enemy threatens around our King
+	
+	We will query the Board class to fetch all these 18 values as an array of 18 double values
+	
+	A chromosome consists of 18 double values. The chromosomes start randomized
+	
+	Every generation will consist of all the specimen playing matches against each other
+	Use a population size of 32, so we get about 1000 matches per generation
+	Restrain match duration to 100 moves (Human games last for about 40 moves in average)
+	If there's a checkmate, give 1 point to the victor and 0 to the loser
+	Otherwise, use the following scoring algorithm:
+		give 0.25 points to both victor and loser
+		the remaining 0.5 of a point will be split proportionally to the "points"
+		Counting points:
+		1 pawn = 1 point
+		1 bishop/king is 3 points
+		1 Rook is 5 points
+		1 Queen is 9 points
+		This is to prevent the algorithm from optimizing for taking lots of pieces (instead of going for the King)
+		
+	GreedyGame class:
+		Board
+		double[18] playerA
+		double[18] playerB
+		double playerAPoints
+		double playerBPoints
+		int moveCount
+		viud play()
+		
+	Matchmaking will take place in the FitnessCalculator for the greedy evolvables
+	
+	For each of the matches, a "GreedyGame" will be allocated
+	Being white/black will be assigned randomly
+	each match can be processed by a different thread using parallel.foreach (sth like that)
+	after all threads have finished, collect points to the corresponding individuals
+	
+	Continue until fitness remains constant within a small delta for, say 100 generations
+	
+	Each player will take all its possible moves, evaluate all possible outcomes, and always choose the maximum fitness move
+	The reasoning for disregarding deception at this point is that we know our opponent will not deceive us (it's the same greedy algorithm)
+	
+	It will be good to be able to save entire games as human-readable strings, so we can play back the game and see what happens
+	
+	Remember that we want even the greedy algorithm to be able to achieve checkmates.
+	
+	Just for fun: play chess against the greedy Player :)
+	
+
+3 - Use a second GA to search for a best strategy against human opponent
+================================================================
+
+A "Strategy" is a 10-character string like this: AAADDDAASH
+
+These represent our strategy type for the next 10 moves:
+	A = Attack		= Choose the move that maximizes our score
+	D = Defense		= Choose the move that minimizes opponent's score
+	B = Bribe		= Choose the move that maximizes opponent's score
+	H = Hold back	= Choose the move that minimizes our score
+	
+Begin with all 'A's : AAAAAAAAAA
+
+Anyway, the first moves are standard (you advance some pawns)
+
+Maintain a population of 10 strategies
+
+At every move, update 50 generations
+
+Each generation:
+	Every one of the strategies will play against a stochastic player in a "partial" match
+	In the partial match, the strategic player will carry out its 10 moves according to its dna
+	... and the stochastic player will perform random moves of doing what's best for him
+	After the 10 moves have been carried out, we calculate the score of the board and the score becomes the fitness of the strategy
+	
+After the evolving has finished:
+	The Strategic player plays its best strategy's first character against the human
+	It removes the first character from all the specimen and adds to all specimen a random character at the end
+	
+	
+	
+	
+	
+	
+	
+	
+	
