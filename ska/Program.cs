@@ -14,9 +14,9 @@ namespace ska
 			Evolver<EvolvableString> evolver = new Evolver<EvolvableString>(new FitnessCalculatorString());
 			evolver.initialize();
 
-			for (int i = 0; i < 10000; i++) {
+			for (int i = 0; i < 100000; i++) {
 				evolver.updateGeneration();
-				if (evolver.champion.fitness == 1.0) break;
+				if (evolver.champion.fitness > 0.99) break;
 			}
         }
     }

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace ska.GA {
 	class EvolvableString : Evolvable {
 
-		public const int SIZE = 5;
+		public const string targetString = "turing believes machines think";
+		public static int SIZE { get { return targetString.Length; } }
 
 
 		private char[] dna = new char[SIZE];
@@ -37,7 +38,8 @@ namespace ska.GA {
 
 		private static char getRandomLetter() {
 			char ret = 'a';
-			ret += (char)Helper.RandomInt(0, 'z' - 'a' + 1);
+			ret += (char)Helper.RandomInt(0, 'z' - 'a' + 2);
+			if (ret > 'z') return ' '; // hack to make whitespace possible
 			return ret;
 		}
 

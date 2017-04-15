@@ -10,8 +10,8 @@ namespace ska.GA {
 
 		const int populationSize = 50;
 		const int rankSelection = 25;
-		const double crossoverRate = 0.7;
-		const double mutationRate = 0.001;
+		const double crossoverRate = 0.9;
+		const double mutationRate = 0.05;
 
 		List<T> population = new List<T>();
 
@@ -36,7 +36,7 @@ namespace ska.GA {
 			generationCount++;
 
 			// calculate fitness values
-			foreach (var s in population) s.fitness = fitnessCalculator.getFitness(s);
+			fitnessCalculator.assignFitnessValues(population);
 
 			// sort population by fitness
 			population = population.OrderByDescending(o => o.fitness).ToList();
@@ -63,7 +63,7 @@ namespace ska.GA {
 			Console.Write("" + generationCount + "\t" + averageFitness + "\t" + maxFitness + "\n");
 
 			// print top 5 members
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 1; i++) {
 				if (i >= population.Count) break;
 				Console.Write(population[i].toString() + "\t");
 			}
@@ -75,13 +75,13 @@ namespace ska.GA {
 			T parent1 = topRankingRandom;
 			T parent2 = topRankingRandom;
 
+			// start by cloning the parents
 			T offspring1 = new T();
 			T offspring2 = new T();
+			offspring1.fromString(parent1.toString());
+			offspring2.fromString(parent2.toString());
 
-			offspring1.randomize();
-			offspring2.randomize();
-
-			// crossover chromosome
+			// if we roll the dice and they tell us to crossover, overwrite the clones with hybrids!
 			if (rollDiceForCrossover()) {
 				parent1.crossover(parent1, parent2,  offspring1, offspring2);
 			}

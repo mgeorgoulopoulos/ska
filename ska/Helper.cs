@@ -10,9 +10,11 @@ namespace ska {
 		private class PerThreadData {
 			public Random rnd;
 
+			private static Random randomizer = new Random();
+
 			public PerThreadData() {
 				// make sure all threads have different random seeds
-				rnd = new Random(Thread.CurrentThread.ManagedThreadId);
+				rnd = new Random(Thread.CurrentThread.ManagedThreadId + randomizer.Next());
 			}
 		}
 
